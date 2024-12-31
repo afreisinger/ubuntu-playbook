@@ -12,7 +12,7 @@ username: "{{ lookup('env', 'USER') }}"
 # Create custom directories
 create_directories: true
 directories:
-  - "{{ ansible_env.HOME }}/repositories/"
+  - "{{ ansible_env.HOME }}/Documents/repositories/"
 
 # Enable paswordless sudo
 configure_sudoers: true
