@@ -12,7 +12,7 @@ username: "{{ lookup('env', 'USER') }}"
 # Create custom directories
 create_directories: true
 directories:
-  - $HOME/Documents/repositories/
+  - "{{ ansible_env.HOME }}/repositories/"
 
 # Enable paswordless sudo
 configure_sudoers: true
@@ -21,7 +21,7 @@ sudoers_custom_config: |
   %sudo ALL=(ALL) NOPASSWD: ALL
 
 # Clone your dotfiles and link them to the home directory
-configure_dotfiles: false
+configure_dotfiles: true
 dotfiles_repo: https://github.com/AlexNabokikh/dotfiles
 dotfiles_repo_accept_hostkey: true
 dotfiles_repo_local_destination: ~/Documents/repositories/dotfiles
