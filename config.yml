@@ -93,9 +93,9 @@ homebrew_packages:
   - tfenv
 
 # Install PIP packages
-pip_packages:
-  - name: pip
-    state: latest
+# pip_packages:
+#  - name: pip
+#    state: latest
 
 # Install NPM packages
 npm_packages:
