@@ -73,7 +73,7 @@ apt_packages:
   - fzf
 
 # Install NIX and and listed packages
-install_nix: true
+install_nix: false
 nix_packages:
   - cowsay
 
