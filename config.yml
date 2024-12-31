@@ -21,7 +21,7 @@ sudoers_custom_config: |
   %sudo ALL=(ALL) NOPASSWD: ALL
 
 # Clone your dotfiles and link them to the home directory
-configure_dotfiles: true
+configure_dotfiles: false
 dotfiles_repo: https://github.com/AlexNabokikh/dotfiles
 dotfiles_repo_accept_hostkey: true
 dotfiles_repo_local_destination: ~/Documents/repositories/dotfiles
@@ -38,7 +38,7 @@ installed_nerdfonts:
   - Meslo
 
 # Configure GNOME. For more details see: https://github.com/PeterMosmans/ansible-role-customize-gnome
-configure_gnome: true
+configure_gnome: false
 gtk_version: 3.0
 gnome_user: "{{ lookup('env', 'USER') }}"
 gnome_extensions:
@@ -83,12 +83,12 @@ snap_packages:
   - nvim
 
 # Install flatpak and listed packages
-install_flatpak: true
+install_flatpak: false
 flatpak_packages:
   - app/org.mozilla.firefox/x86_64/stable
 
 # Install homebrew and listed packages
-install_homebrew: true
+install_homebrew: false
 homebrew_packages:
   - tfenv
 
