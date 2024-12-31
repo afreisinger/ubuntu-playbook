@@ -71,6 +71,7 @@ apt_repositories:
 apt_packages:
   - alacritty
   - fzf
+  - zip
 
 # Install NIX and and listed packages
 install_nix: false
