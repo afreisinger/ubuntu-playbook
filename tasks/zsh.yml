@@ -35,7 +35,7 @@
   when: zsh_themes is defined
 
 - name: Set ZSH as the default shell.
-  become: true
+  become: false
   ansible.builtin.user:
     name: "{{ username }}"
     shell: /bin/zsh
