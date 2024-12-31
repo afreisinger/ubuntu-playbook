@@ -6,6 +6,7 @@
     state: latest
 
 - name: Install TPM (Tmux Plugin Manager)
+  become: false
   ansible.builtin.git:
     repo: https://github.com/tmux-plugins/tpm.git
     dest: "{{ tmux_dir }}/plugins/tpm"
