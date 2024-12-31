@@ -13,6 +13,7 @@
     update: true
 
 - name: Refresh tmux plugins.
+  become: false
   ansible.builtin.shell: |
     {{ tmux_dir }}/plugins/tpm/bin/install_plugins
     {{ tmux_dir }}/plugins/tpm/bin/update_plugins all
