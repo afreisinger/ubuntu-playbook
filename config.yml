@@ -72,6 +72,13 @@ apt_packages:
   - alacritty
   - fzf
   - zip
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - software-properties-common
+  - python3-pip
+  - virtualenv
+  - python3-setuptools
 
 # Install NIX and and listed packages
 install_nix: false
