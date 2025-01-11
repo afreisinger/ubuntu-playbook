@@ -3,7 +3,7 @@
   hosts: all
 
   vars_files:
-    - example.config.yml
+    - config.yml
 
   pre_tasks:
     - name: Include main playbook configuration.
@@ -12,13 +12,13 @@
         - "{{ playbook_dir }}/config.yml"
       tags: ["always"]
 
-  roles:
-    - role: geerlingguy.dotfiles
-      when: configure_dotfiles
-      tags: ["dotfiles"]
-    - role: petermosmans.customize-gnome
-      when: configure_gnome
-      tags: ["gnome"]
+  # roles:
+  #   - role: geerlingguy.dotfiles
+  #     when: configure_dotfiles
+  #     tags: ["dotfiles"]
+  #   - role: petermosmans.customize-gnome
+  #     when: configure_gnome
+  #     tags: ["gnome"]
 
   tasks:
     - name: Include apt packages task configuration.
@@ -43,11 +43,11 @@
       when: install_fonts
       tags: ["fonts"]
 
-    - name: Include homebrew task configuration.
-      ansible.builtin.import_tasks:
-        file: tasks/homebrew.yml
-      tags: ["homebrew"]
-      when: install_homebrew
+    # - name: Include homebrew task configuration.
+    #   ansible.builtin.import_tasks:
+    #     file: tasks/homebrew.yml
+    #   tags: ["homebrew"]
+    #   when: install_homebrew
 
     - name: Include hostname configuration.
       ansible.builtin.import_tasks:
