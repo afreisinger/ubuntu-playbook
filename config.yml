@@ -80,6 +80,9 @@ apt_packages:
   - virtualenv
   - python3-setuptools
 
+# Install asdf
+install_asdf: true
+
 # Install NIX and and listed packages
 install_nix: false
 nix_packages:

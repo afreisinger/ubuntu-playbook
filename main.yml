@@ -26,6 +26,11 @@
         file: tasks/apt.yml
       tags: ["apt"]
 
+   - name: Include asdf packages task configuration.
+      ansible.builtin.import_tasks:
+        file: tasks/asdf.yml
+      tags: ["asdf"]
+
     - name: Include directories task configuration.
       ansible.builtin.import_tasks:
         file: tasks/directories.yml
