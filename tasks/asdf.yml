@@ -1,0 +1,20 @@
+---
+- name: Install dependencies for asdf.
+  become: true
+  ansible.builtin.apt:
+    name:
+      - curl
+      - git
+      - libssl-dev
+      - libreadline-dev
+      - zlib1g-dev
+    state: present
+    update_cache: true
+
+- name: Clone asdf repository.
+  become: false
+  ansible.builtin.git:
+    repo: 'https://github.com/asdf-vm/asdf.git'
+    dest: '/home/{{ ansible_user }}/.asdf'
+    clone: yes
+    update: yes
