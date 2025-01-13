@@ -82,6 +82,9 @@ apt_packages:
 
 # Install asdf
 install_asdf: true
+ansible_user: "{{ lookup('env', 'USER') }}"
+asdf_plugins:
+  - { name: 'nodejs', version: '20.5.0' }
 
 # Install NIX and and listed packages
 install_nix: false
