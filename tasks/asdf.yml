@@ -1,5 +1,5 @@
 ---
-- name: Install dependencies for asdf.
+- name: Install dependencies for asdf
   become: true
   ansible.builtin.apt:
     name:
@@ -11,10 +11,55 @@
     state: present
     update_cache: true
 
-- name: Clone asdf repository.
+- name: Clone asdf repository
   become: false
   ansible.builtin.git:
     repo: 'https://github.com/asdf-vm/asdf.git'
     dest: '/home/{{ ansible_user }}/.asdf'
     clone: yes
     update: yes
+
+- name: Ensure completions directory exists
+  become: false
+  ansible.builtin.file:
+    path: '/home/{{ ansible_user }}/.asdf/completions'
+    state: directory
+
+- name: Download asdf completions file
+  become: false
+  ansible.builtin.get_url:
+    url: 'https://raw.githubusercontent.com/asdf-vm/asdf/master/internal/completions/asdf.bash'
+    dest: '/home/{{ ansible_user }}/.asdf/completions/asdf.bash'
+
+- name: Install ASDF plugins
+  become: false
+  ansible.builtin.shell: |
+    . $HOME/.asdf/asdf.sh
+    asdf plugin add {{ item.name }}
+  loop: "{{ asdf_plugins }}"
+  when:
+    - install_asdf
+    - asdf_plugins is defined
+    - asdf_plugins | length > 0
+
+- name: Install specific versions of ASDF plugins
+  become: false
+  ansible.builtin.shell: |
+    . $HOME/.asdf/asdf.sh
+    asdf install {{ item.name }} {{ item.version }}
+  loop: "{{ asdf_plugins }}"
+  when:
+    - install_asdf
+    - asdf_plugins is defined
+    - asdf_plugins | length > 0
+
+- name: Set global versions for ASDF plugins
+  become: false
+  ansible.builtin.shell: |
+    . $HOME/.asdf/asdf.sh
+    asdf global {{ item.name }} {{ item.version }}
+  loop: "{{ asdf_plugins }}"
+  when:
+    - install_asdf
+    - asdf_plugins is defined
+    - asdf_plugins | length > 0
