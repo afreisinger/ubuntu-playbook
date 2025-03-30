@@ -5,3 +5,6 @@ config.yml
 hosts
 
 .codegpt
+
+package-lock.json
+package.json
