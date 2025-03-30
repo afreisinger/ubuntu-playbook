@@ -1,15 +1,39 @@
 ---
+# - name: Install global NPM packages.
+#   community.general.npm:
+#     name: "{{ item.name | default(item) }}"
+#     state: "{{ item.state | default('present') }}"
+#     version: "{{ item.version | default(omit) }}"
+#     global: true
+#     executable: "{{ item.executable | default(omit) }}"
+#   loop: "{{ npm_packages }}"
+#   loop_control:
+#     label: "{{ item.name }}"
+#   when: npm_packages is defined
+
+- name: Ensure NPM path is in ~/.profile
+  become: false
+  copy:
+    dest: "{{ ansible_env.HOME }}/.profile"
+    content: 'export PATH=$HOME/.npm-global/bin:$PATH'
+    mode: '0644'
+
 - name: Install global NPM packages.
-  community.general.npm:
-    name: "{{ item.name | default(item) }}"
-    state: "{{ item.state | default('present') }}"
-    version: "{{ item.version | default(omit) }}"
-    global: true
-    executable: "{{ item.executable | default(omit) }}"
+  become: false
+  ansible.builtin.shell:
+    cmd: |
+      export PATH=$HOME/.npm-global/bin:$PATH
+      export PATH=$HOME/.nix-profile/bin:$PATH
+      mkdir -p ~/.npm-global
+      npm config set prefix '~/.npm-global'
+      npm install --global --prefix ~/.npm-global {{ item.name }}
   loop: "{{ npm_packages }}"
   loop_control:
     label: "{{ item.name }}"
   when: npm_packages is defined
+  environment:
+    PATH: "$HOME/.npm-global/bin:{{ ansible_env.PATH }}"
+
 
 - name: Install global Pip packages.
   ansible.builtin.pip:

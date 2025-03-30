@@ -42,6 +42,13 @@
     mode: "0755"
   register: nix_directory
 
+- name: Ensure Nix path is in /etc/profile.d
+  become: true
+  copy:
+    dest: /etc/profile.d/nix.sh
+    content: 'export PATH=$HOME/.nix-profile/bin:$PATH'
+    mode: '0644'
+
 - name: Set should_install_nix fact based on Nix directory status
   ansible.builtin.set_fact:
     should_install_nix: "{{ nix_directory.changed }}"

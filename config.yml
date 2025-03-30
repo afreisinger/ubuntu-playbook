@@ -2,7 +2,7 @@
 # System settings
 
 # Set hostname
-custom_hostname: my-awesome-pc
+custom_hostname: silicio
 
 # User settings
 
@@ -12,7 +12,7 @@ username: "{{ lookup('env', 'USER') }}"
 # Create custom directories
 create_directories: true
 directories:
-  - "{{ ansible_env.HOME }}/Documents/repositories/"
+  - "{{ ansible_env.HOME }}/repositories/"
 
 # Enable paswordless sudo
 configure_sudoers: true
@@ -21,14 +21,16 @@ sudoers_custom_config: |
   %sudo ALL=(ALL) NOPASSWD: ALL
 
 # Clone your dotfiles and link them to the home directory
-configure_dotfiles: false
-dotfiles_repo: https://github.com/AlexNabokikh/dotfiles
+configure_dotfiles: true
+#dotfiles_repo: https://gitlab.com/AlexNabokikh/dotfiles
 dotfiles_repo_accept_hostkey: true
-dotfiles_repo_local_destination: ~/Documents/repositories/dotfiles
+dotfiles_repo_local_destination: ~/repositories/dotfiles
 dotfiles_files:
   - .gitconfig
-  - .p10k.zsh
-  - .tmux.conf
+  - .gitignore
+  - .inputrc
+  #- .p10k.zsh
+  #- .tmux.conf
   - .vimrc
   - .zshrc
 
@@ -38,17 +40,17 @@ installed_nerdfonts:
   - Meslo
 
 # Configure GNOME. For more details see: https://github.com/PeterMosmans/ansible-role-customize-gnome
-configure_gnome: false
-gtk_version: 3.0
-gnome_user: "{{ lookup('env', 'USER') }}"
-gnome_extensions:
-  - id: 3843
-    enable: true
+# configure_gnome: false
+# gtk_version: 3.0
+# gnome_user: "{{ lookup('env', 'USER') }}"
+# gnome_extensions:
+#   - id: 3843
+#     enable: true
 
-gnome_gsettings:
-  - schema: org.gnome.desktop.peripherals.mouse
-    key: accel-profile
-    value: "flat"
+# gnome_gsettings:
+#   - schema: org.gnome.desktop.peripherals.mouse
+#     key: accel-profile
+#     value: "flat"
 
 # Install and configure zsh
 configure_zsh: true
@@ -87,9 +89,10 @@ asdf_plugins:
   - { name: 'nodejs', version: '20.5.0' }
 
 # Install NIX and and listed packages
-install_nix: false
+install_nix: true
 nix_packages:
   - cowsay
+  - nodejs
 
 # Install snap and and listed packages
 install_snap: true
@@ -97,7 +100,7 @@ snap_packages:
   - nvim
 
 # Install flatpak and listed packages
-install_flatpak: false
+install_flatpak: true
 flatpak_packages:
   - app/org.mozilla.firefox/x86_64/stable
 
@@ -107,9 +110,9 @@ homebrew_packages:
   - tfenv
 
 # Install PIP packages
-# pip_packages:
-#  - name: pip
-#    state: latest
+pip_packages:
+ - name: pip
+   state: latest
 
 # Install NPM packages
 npm_packages:

@@ -15,7 +15,7 @@
   become: false
   ansible.builtin.git:
     repo: 'https://github.com/asdf-vm/asdf.git'
-    dest: '/home/{{ ansible_user }}/.asdf'
+    dest: '/home/{{ username }}/.asdf'
     clone: yes
     update: yes
 
