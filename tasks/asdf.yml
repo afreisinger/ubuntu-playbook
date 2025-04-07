@@ -1,65 +1,75 @@
----
-- name: Install dependencies for asdf
-  become: true
-  ansible.builtin.apt:
-    name:
-      - curl
-      - git
-      - libssl-dev
-      - libreadline-dev
-      - zlib1g-dev
-    state: present
-    update_cache: true
+- name: Set ASDF directory
+  set_fact:
+    asdf_dir: "/home/{{ username }}/.asdf"
 
-- name: Clone asdf repository
+- name: Check if Go is installed
+  command: /usr/local/go/bin/go version
+  register: go_check
+  ignore_errors: true
+
+- name: Install asdf using Go
   become: false
-  ansible.builtin.git:
-    repo: 'https://github.com/asdf-vm/asdf.git'
-    dest: '/home/{{ username }}/.asdf'
-    clone: yes
-    update: yes
+  ansible.builtin.shell: |
+    /usr/local/go/bin/go install github.com/asdf-vm/asdf/cmd/asdf@latest
+  args:
+    executable: /bin/bash
+    creates: "/home/{{ username }}/go/bin/asdf"
+  environment:
+    GOPATH: "/home/{{ username }}/go"
+    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}:/home/{{ username }}/go/bin"
+  when: go_check.rc == 0
+
+- name: Create asdf bin directory
+  ansible.builtin.file:
+    path: "{{ asdf_dir }}/bin"
+    state: directory
+    mode: '0755'
+
+- name: Check if asdf binary was installed by Go
+  ansible.builtin.stat:
+    path: "/home/{{ username }}/go/bin/asdf"
+  register: asdf_go_bin
+
+- name: Move compiled asdf binary to .asdf/bin
+  ansible.builtin.copy:
+    remote_src: true
+    src: "/home/{{ username }}/go/bin/asdf"
+    dest: "{{ asdf_dir }}/bin/asdf"
+    mode: '0755'
+  when: asdf_go_bin.stat.exists
 
 - name: Ensure completions directory exists
-  become: false
   ansible.builtin.file:
-    path: '/home/{{ ansible_user }}/.asdf/completions'
+    path: "{{ asdf_dir }}/completions"
     state: directory
+    mode: '0755'
 
 - name: Download asdf completions file
-  become: false
   ansible.builtin.get_url:
     url: 'https://raw.githubusercontent.com/asdf-vm/asdf/master/internal/completions/asdf.bash'
-    dest: '/home/{{ ansible_user }}/.asdf/completions/asdf.bash'
+    dest: "{{ asdf_dir }}/completions/asdf.bash"
+    mode: '0644'
 
-- name: Install ASDF plugins
-  become: false
-  ansible.builtin.shell: |
-    . $HOME/.asdf/asdf.sh
-    asdf plugin add {{ item.name }}
-  loop: "{{ asdf_plugins }}"
-  when:
-    - install_asdf
-    - asdf_plugins is defined
-    - asdf_plugins | length > 0
+- name: Get user shell from /etc/passwd
+  command: "getent passwd {{ username }}"
+  register: user_passwd
 
-- name: Install specific versions of ASDF plugins
-  become: false
-  ansible.builtin.shell: |
-    . $HOME/.asdf/asdf.sh
-    asdf install {{ item.name }} {{ item.version }}
-  loop: "{{ asdf_plugins }}"
-  when:
-    - install_asdf
-    - asdf_plugins is defined
-    - asdf_plugins | length > 0
+- name: Extract shell from getent output
+  set_fact:
+    user_shell: "{{ user_passwd.stdout.split(':')[-1] | trim }}"
 
-- name: Set global versions for ASDF plugins
-  become: false
-  ansible.builtin.shell: |
-    . $HOME/.asdf/asdf.sh
-    asdf global {{ item.name }} {{ item.version }}
-  loop: "{{ asdf_plugins }}"
-  when:
-    - install_asdf
-    - asdf_plugins is defined
-    - asdf_plugins | length > 0
+- name: Set shell init file
+  set_fact:
+    shell_rc_file: >-
+      {{ "/home/" + username + "/.zshrc" if "zsh" in user_shell else "/home/" + username + "/.bashrc" }}
+
+- name: Add ASDF configuration to shell init file
+  ansible.builtin.lineinfile:
+    path: "{{ shell_rc_file }}"
+    line: '{{ item }}'
+    create: true
+    insertafter: EOF
+  loop:
+    - 'export ASDF_DIR="{{ asdf_dir }}"'
+    - '. "$ASDF_DIR/asdf.sh"'
+    - '. "$ASDF_DIR/completions/asdf.bash"'

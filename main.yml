@@ -2,20 +2,26 @@
 - name: Ubuntu Playbook!
   hosts: all
 
-  vars_files:
-    - config.yml
+  # vars_files:
+  #   - config.yml
 
-  # pre_tasks:
-  #   - name: Include main playbook configuration.
-  #     ansible.builtin.include_vars: "{{ item }}"
-  #     with_fileglob:
-  #       - "{{ playbook_dir }}/config.yml"
-  #     tags: ["always"]
+  pre_tasks:
+    - name: Include main playbook configuration.
+      ansible.builtin.include_vars: "{{ item }}"
+      with_fileglob:
+        - "{{ playbook_dir }}/config.yml"
+      tags: ["always"]
 
   roles:
-    - role: geerlingguy.dotfiles
+    - role: afreisinger.dotfiles
       when: configure_dotfiles
       tags: ["dotfiles"]
+
+    - role: afreisinger.go
+      when: configure_go or configure_asdf
+      tags: ["go"]
+
+
   #   - role: petermosmans.customize-gnome
   #     when: configure_gnome
   #     tags: ["gnome"]
@@ -25,6 +31,7 @@
       ansible.builtin.import_tasks:
         file: tasks/apt.yml
       tags: ["apt"]
+
 
     - name: Include asdf packages task configuration.
       ansible.builtin.import_tasks:

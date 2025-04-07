@@ -22,17 +22,20 @@ sudoers_custom_config: |
 
 # Clone your dotfiles and link them to the home directory
 configure_dotfiles: true
-#dotfiles_repo: https://gitlab.com/AlexNabokikh/dotfiles
+dotfiles_repo: https://github.com/afreisinger/test_dotfiles
+dotfiles_repo_version: main
 dotfiles_repo_accept_hostkey: true
-dotfiles_repo_local_destination: ~/repositories/dotfiles
+dotfiles_repo_local_destination: ~/.dotfiles
 dotfiles_files:
-  - .gitconfig
+  #- .gitconfig
   - .gitignore
   - .inputrc
   #- .p10k.zsh
   #- .tmux.conf
   - .vimrc
   - .zshrc
+  - .yamllint
+  - .ansible-lint
 
 # Install Nerd Fonts
 install_fonts: true
@@ -82,11 +85,19 @@ apt_packages:
   - virtualenv
   - python3-setuptools
 
+# Install Go
+configure_go: true
+go_version: "1.24.2"
+go_checksum: '68097bd680839cbc9d464a0edce4f7c333975e27a90246890e9f1078c7e702ad'
+
 # Install asdf
 install_asdf: true
+asdf_shell_integration: true
 ansible_user: "{{ lookup('env', 'USER') }}"
 asdf_plugins:
   - { name: 'nodejs', version: '20.5.0' }
+  - { name: "python", version: '3.11.7' }
+
 
 # Install NIX and and listed packages
 install_nix: true

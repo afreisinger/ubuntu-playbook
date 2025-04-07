@@ -1,7 +1,7 @@
 ---
 roles:
-  - name: geerlingguy.dotfiles
-  - name: petermosmans.customize-gnome
+  - name: afreisinger.dotfiles
+  - name: afreisinger.go
 
 collections:
   - name: ansible.posix
