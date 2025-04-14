@@ -2,7 +2,12 @@
 roles:
   - name: afreisinger.dotfiles
   - name: afreisinger.go
+  - name: afreisinger.asdf
+  - name: geerlingguy.docker
 
 collections:
   - name: ansible.posix
   - name: community.general
+    version: "9.4.0"
+  - name: community.docker
+    version: "4.2.0"

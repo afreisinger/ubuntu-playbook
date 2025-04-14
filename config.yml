@@ -91,13 +91,22 @@ go_version: "1.24.2"
 go_checksum: '68097bd680839cbc9d464a0edce4f7c333975e27a90246890e9f1078c7e702ad'
 
 # Install asdf
-install_asdf: true
-asdf_shell_integration: true
-ansible_user: "{{ lookup('env', 'USER') }}"
+configure_asdf: true
+asdf_version: "v0.14.1"
 asdf_plugins:
-  - { name: 'nodejs', version: '20.5.0' }
+  - { name: 'nodejs', version: '23.11.0' }
   - { name: "python", version: '3.11.7' }
+  - { name: "terraform", version: '1.1.14' }
 
+# asdf_plugins:
+#   - name: "terraform"    # a plugin name
+#     repository: ""       # a plugin repository, optional
+#     versions:            # a list of the package versions to install
+#       - "0.11.14"
+#     global: "0.11.14"    # set as a global version, optional
+
+#Install docker
+configure_docker: true
 
 # Install NIX and and listed packages
 install_nix: true
